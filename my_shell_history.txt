@@ -1,0 +1,4 @@
+history
+ls
+ls -a
+pwd
