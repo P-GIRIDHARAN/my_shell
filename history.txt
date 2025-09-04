@@ -5,3 +5,6 @@ exit
 ls -a
 history
 exit
+history
+exit
+./a.out

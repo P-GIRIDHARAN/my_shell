@@ -115,7 +115,6 @@ void handlePipeline(const vector<string>& commands, bool background) {
                 close(fdout);
             }
 
-            // Only run external commands in a pipeline
             vector<char*> argv;
             for (auto &s : args) argv.push_back(const_cast<char*>(s.c_str()));
             argv.push_back(nullptr);
