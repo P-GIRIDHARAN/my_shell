@@ -7,10 +7,12 @@ OBJECTS = $(SOURCES:.cpp=.o)
 
 TARGET = a.out
 
+LIBS = -lreadline -lhistory   
+
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
