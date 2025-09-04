@@ -52,6 +52,7 @@
         "cinttypes": "cpp",
         "codecvt": "cpp",
         "ratio": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "fstream": "cpp"
     }
 }

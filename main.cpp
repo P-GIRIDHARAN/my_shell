@@ -1,11 +1,11 @@
+#include <string>
+#include <vector>
 #include <iostream>
 #include <unistd.h>
 #include <pwd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <cstring>
-#include <vector>
-#include <string>
 #include <cstdlib>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -24,7 +24,7 @@
 #include "history.h"
 #include "utils.h"
 
-string SHELL_HOME;
+std::string SHELL_HOME;
 
 using namespace std;
 
@@ -108,6 +108,10 @@ void executeCommand(string cmd) {
 }
 
 int main() {
+    rl_catch_signals = 0;
+
+    rl_initialize();         
+    setupAutocomplete();
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
     SHELL_HOME = string(cwd);
@@ -127,6 +131,7 @@ int main() {
         string prompt = username + "@" + hostname + ":" + getCurrentDir() + "> ";
         char* line = readline(prompt.c_str());
         if (!line) {
+            write(STDOUT_FILENO, "^D\n", 3);
             cout << endl; 
             break;
         }

@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
-using namespace std;
 
-vector<string> splitWords(const string &input);
-vector<string> getInternalCommands();
-vector<string> getFiles(const string &prefix);
-string commonPrefix(const vector<string> &words);
+std::vector<std::string> splitWords(const std::string &input);
+std::vector<std::string> getInternalCommands();
+std::vector<std::string> getFiles(const std::string &prefix);
+std::string commonPrefix(const std::vector<std::string> &words);
+void setupAutocomplete();
