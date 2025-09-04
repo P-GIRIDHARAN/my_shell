@@ -11,6 +11,42 @@ string trim(const string &str) {
     size_t last = str.find_last_not_of(" \t\n\r");
     return str.substr(first, last - first + 1);
 }
+
+vector<string> tokenizeEcho(const string &str) {
+    vector<string> result;
+    string token;
+    bool inQuotes = false;
+    char quoteChar = 0;
+
+    for (size_t i = 0; i < str.size(); ++i) {
+        char c = str[i];
+
+        if (c == '"' || c == '\'') {
+            if (!inQuotes) { 
+                inQuotes = true; 
+                quoteChar = c; 
+                token += c;   
+            } else if (inQuotes && c == quoteChar) {
+                inQuotes = false; 
+                token += c;   
+            } else {
+                token += c; 
+            }
+        } else if (!inQuotes && isspace(c)) {
+            if (!token.empty()) { 
+                result.push_back(token); 
+                token.clear(); 
+            }
+        } else {
+            token += c;
+        }
+    }
+
+    if (!token.empty()) result.push_back(token);
+    return result;
+}
+
+
 vector<string> tokenize(const string &str,
                         const string &delims,
                         bool preserveQuotes) {

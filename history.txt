@@ -1,0 +1,7 @@
+ls
+exit
+ls
+exit
+ls -a
+history
+exit

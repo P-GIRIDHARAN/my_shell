@@ -5,7 +5,7 @@
 #include <cstring>
 
 static std::vector<std::string> historyBuffer;
-static std::string historyFile = std::string(getenv("HOME")) + "/history.txt";
+static std::string historyFile = "history.txt";
 
 void loadHistory() {
     historyBuffer.clear();
@@ -40,7 +40,6 @@ void saveHistory() {
 void addToHistory(const std::string& cmd) {
     if (cmd.empty()) return;
 
-    // Avoid duplicate consecutive commands
     if (!historyBuffer.empty() && historyBuffer.back() == cmd) return;
 
     historyBuffer.push_back(cmd);

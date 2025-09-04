@@ -81,10 +81,10 @@ void executeCommand(string cmd) {
     string command;
 
     if (cmd.substr(0, 4) == "echo") {
-        args = tokenize(cmd, " \t", true); 
+        args = tokenizeEcho(cmd); 
         command = args[0];
     } else {
-        args = tokenize(cmd, " \t",true); 
+        args = tokenize(cmd, " \t",false); 
         if (args.empty()) return;
         command = args[0];
     }
