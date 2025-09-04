@@ -5,7 +5,9 @@
 #include <vector>
 
 std::string trim(const std::string &str);
-std::vector<std::string> tokenize(const std::string &str, const std::string &delim);
+std::vector<std::string> tokenize(const std::string &str,
+                                  const std::string &delim = " \t",
+                                  bool preserveQuotes = false);
 std::string replaceHomeDir(const std::string &path);
 
 #endif

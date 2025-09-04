@@ -1,42 +1,43 @@
 #include "utils.h"
-#include <algorithm>
-#include <sstream>
+#include <cctype>
+#include <cstdlib>
 #include <cstring>
+
 using namespace std;
 
 string trim(const string &str) {
     size_t first = str.find_first_not_of(" \t\n\r");
     if (first == string::npos) return "";
     size_t last = str.find_last_not_of(" \t\n\r");
-    return str.substr(first, (last - first + 1));
+    return str.substr(first, last - first + 1);
 }
-
-vector<string> tokenize(const string &str, const string &delim = " \t") {
-    vector<string> tokens;
-    string token = "";
+vector<string> tokenize(const string &str,
+                        const string &delims,
+                        bool preserveQuotes) {
+    vector<string> result;
+    string token;
     bool inQuotes = false;
+    char quoteChar = 0;
 
     for (size_t i = 0; i < str.size(); ++i) {
         char c = str[i];
-
-        if (c == '"') {
-            inQuotes = !inQuotes;
-            continue; 
-        }
-
-        if (!inQuotes && delim.find(c) != string::npos) {
-            if (!token.empty()) {
-                tokens.push_back(token);
-                token.clear();
-            }
+        if (preserveQuotes && (c == '"' || c == '\'')) {
+            if (inQuotes && c == quoteChar) inQuotes = false;
+            else if (!inQuotes) { inQuotes = true; quoteChar = c; }
+            else token += c;
+        } else if (!inQuotes && delims.find(c) != string::npos) {
+            if (!token.empty()) { result.push_back(token); token.clear(); }
         } else {
-            token += c; 
+            token += c;
         }
     }
-
-    if (!token.empty()) tokens.push_back(token);
-    return tokens;
+    if (!token.empty()) result.push_back(token);
+    return result;
 }
+
+
+
+
 
 string replaceHomeDir(const string &path) {
     const char *home = getenv("HOME");

@@ -25,6 +25,8 @@
 #include "utils.h"
 
 std::string SHELL_HOME;
+pid_t parent_pgid;
+pid_t shell_pgid;
 
 using namespace std;
 
@@ -69,13 +71,23 @@ void executeCommand(string cmd) {
     }
     if (cmd.find('|') != string::npos) {
         vector<string> pipeCmds = tokenize(cmd, "|");
-        handlePipeline(pipeCmds);
+        for(auto &c : pipeCmds) c = trim(c); 
+        handlePipeline(pipeCmds, background);
         return;
     }
 
-    vector<string> args = tokenize(cmd, " \t");
-    if (args.empty()) return;
+    vector<string> args;
 
+    string command;
+
+    if (cmd.substr(0, 4) == "echo") {
+        args = tokenize(cmd, " \t", true); 
+        command = args[0];
+    } else {
+        args = tokenize(cmd, " \t",true); 
+        if (args.empty()) return;
+        command = args[0];
+    }
     for (const auto& s : args) {
         if (s == "<" || s == ">" || s == ">>") {
             handleIORedirection(args);
@@ -83,7 +95,6 @@ void executeCommand(string cmd) {
         }
     }
 
-    string command = args[0];
     if (command == "exit") {
         exit(0);
     } else if (command == "cd") {
@@ -108,22 +119,26 @@ void executeCommand(string cmd) {
 }
 
 int main() {
-    rl_catch_signals = 0;
+    rl_catch_signals = 1;
+    rl_initialize();
 
-    rl_initialize();         
+    parent_pgid = tcgetpgrp(STDIN_FILENO);
+    pid_t shell_pgid = getpid();
+    if (setpgid(shell_pgid, shell_pgid) < 0) perror("setpgid failed");
+    if (tcsetpgrp(STDIN_FILENO, shell_pgid) < 0) perror("tcsetpgrp failed");
+
+    setupSignalHandlers();
     setupAutocomplete();
+
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
     SHELL_HOME = string(cwd);
 
-    setupSignalHandlers();
     atexit(saveHistory);
-
-    loadHistory();  
+    loadHistory();
 
     string username = getUsername();
     string hostname = getHostName();
-
     string historyFile = string(getenv("HOME")) + "/history.txt";
     read_history(historyFile.c_str());
 
@@ -131,26 +146,30 @@ int main() {
         string prompt = username + "@" + hostname + ":" + getCurrentDir() + "> ";
         char* line = readline(prompt.c_str());
         if (!line) {
-            write(STDOUT_FILENO, "^D\n", 3);
-            cout << endl; 
+            cout << "^D" << endl;
             break;
         }
 
         string input(line);
         free(line);
 
-        if (!input.empty()) {
-            add_history(input.c_str());   
-            addToHistory(input);         
-        }
+        input = trim(input);
+        if (input.empty()) continue;
+
+        add_history(input.c_str());
+        addToHistory(input);
 
         vector<string> commands = tokenize(input, ";");
         for (auto &cmd : commands) {
-            executeCommand(cmd);
+            cmd = trim(cmd);
+            if (!cmd.empty()) {
+                foregroundPid = -1;
+                executeCommand(cmd);
+            }
         }
     }
 
+    tcsetpgrp(STDIN_FILENO, parent_pgid); 
     write_history(historyFile.c_str());
-
     return 0;
 }

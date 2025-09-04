@@ -1,9 +1,9 @@
 #include "signals.h"
 #include <iostream>
 #include <signal.h>
-#include <unistd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <unistd.h>
 
 pid_t foregroundPid = -1;
 std::vector<Job> jobs;

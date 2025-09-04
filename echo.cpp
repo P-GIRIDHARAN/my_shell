@@ -1,7 +1,7 @@
 #include "echo.h"
 #include <iostream>
 #include <string>
-#include <algorithm>
+#include <vector>
 using namespace std;
 
 void echoCommand(const vector<string>& args) {
@@ -11,3 +11,4 @@ void echoCommand(const vector<string>& args) {
     }
     cout << endl;
 }
+

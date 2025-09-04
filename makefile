@@ -7,7 +7,7 @@ OBJECTS = $(SOURCES:.cpp=.o)
 
 TARGET = a.out
 
-LIBS = -lreadline -lhistory   
+LIBS = -lreadline
 
 all: $(TARGET)
 

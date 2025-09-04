@@ -1,0 +1,15 @@
+a_lines.txt
+apples.txt
+banana_count.txt
+banana.txt
+filtered.txt
+fruits.txt
+lines.txt
+my_shell_history.txt
+numbers.txt
+output.txt
+out.txt
+sorted.txt
+sorted_unique.txt
+sort.txt
+test.txt
