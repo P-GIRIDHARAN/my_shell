@@ -5,7 +5,8 @@
 #include <cstring>
 
 static std::vector<std::string> historyBuffer;
-static std::string historyFile = "history.txt";
+static std::string historyFile = std::string(getenv("HOME")) + "/history.txt";
+
 
 void loadHistory() {
     historyBuffer.clear();

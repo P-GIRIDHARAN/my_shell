@@ -1,10 +1,9 @@
-ls
 exit
 ls
-exit
+./a.out
 ls -a
-history
-exit
-history
 exit
 ./a.out
+ls
+ls -a
+exit

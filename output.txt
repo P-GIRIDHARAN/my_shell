@@ -1,1 +1,4 @@
-3
+history.txt
+lines.txt
+output.txt
+out.txt
